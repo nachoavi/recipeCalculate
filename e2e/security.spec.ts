@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { clearAppState, addIngredient } from './helpers';
+import { clearAppState, addIngredient, ingredientName, recipeForm } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await clearAppState(page);
@@ -11,7 +11,7 @@ test('XSS in ingredient name is rendered as text, not executed', async ({ page }
 
   const xssExecuted = await page.evaluate(() => (window as unknown as { __xss?: boolean }).__xss);
   expect(xssExecuted).toBeUndefined();
-  await expect(page.getByText(xssPayload)).toBeVisible();
+  await expect(ingredientName(page, xssPayload)).toBeVisible();
 });
 
 test('XSS in recipe name is not executed', async ({ page }) => {
@@ -19,10 +19,11 @@ test('XSS in recipe name is not executed', async ({ page }) => {
   await page.getByRole('button', { name: /recetas/i }).click();
 
   const xss = '"><img src=x onerror=window.__xss2=true>';
-  await page.getByPlaceholder('Ej: Bizcochuelo de vainilla').fill(xss);
-  await page.locator('select').first().selectOption({ label: 'Harina' });
-  await page.locator('input[placeholder="Cant."]').first().fill('100');
-  await page.getByRole('button', { name: /guardar receta/i }).click();
+  const form = recipeForm(page);
+  await form.getByPlaceholder('Ej: Bizcochuelo de vainilla').fill(xss);
+  await form.locator('select').first().selectOption({ label: 'Harina' });
+  await form.locator('input[placeholder="Cant."]').first().fill('100');
+  await form.getByRole('button', { name: /guardar receta/i }).click();
 
   const xssExecuted = await page.evaluate(() => (window as unknown as { __xss2?: boolean }).__xss2);
   expect(xssExecuted).toBeUndefined();

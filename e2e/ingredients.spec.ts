@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { clearAppState, addIngredient } from './helpers';
+import { clearAppState, addIngredient, ingredientName } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await clearAppState(page);
@@ -11,7 +11,7 @@ test('shows empty state when no ingredients', async ({ page }) => {
 
 test('add ingredient and verify it appears in list', async ({ page }) => {
   await addIngredient(page, 'Harina 000', '1000', 'g', '1200');
-  await expect(page.getByText('Harina 000')).toBeVisible();
+  await expect(ingredientName(page, 'Harina 000')).toBeVisible();
   await expect(page.getByText('1000 g')).toBeVisible();
 });
 
@@ -23,9 +23,9 @@ test('ingredient counter shows in tab', async ({ page }) => {
 
 test('delete ingredient removes it from list', async ({ page }) => {
   await addIngredient(page, 'Sal', '500', 'g', '300');
-  await expect(page.getByText('Sal')).toBeVisible();
+  await expect(ingredientName(page, 'Sal')).toBeVisible();
   await page.getByTitle('Eliminar ingrediente').click();
-  await expect(page.getByText('Sal')).not.toBeVisible();
+  await expect(ingredientName(page, 'Sal')).not.toBeVisible();
   await expect(page.getByText('Agregá ingredientes para empezar a calcular')).toBeVisible();
 });
 
@@ -38,8 +38,8 @@ test('multiple ingredients are all listed', async ({ page }) => {
 
 test('persists ingredients after page reload', async ({ page }) => {
   await addIngredient(page, 'Vainilla', '100', 'ml', '800');
-  await expect(page.getByText('Vainilla')).toBeVisible();
+  await expect(ingredientName(page, 'Vainilla')).toBeVisible();
   // reload — no addInitScript so localStorage survives
   await page.reload();
-  await expect(page.getByText('Vainilla')).toBeVisible();
+  await expect(ingredientName(page, 'Vainilla')).toBeVisible();
 });
