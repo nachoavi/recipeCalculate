@@ -77,23 +77,23 @@ export default function App() {
           )}
         </div>
 
-        {activeTab === 'ingredients' && (
+        <div className={activeTab !== 'ingredients' ? 'hidden' : ''}>
           <IngredientsTab
             ingredients={ingredients}
             rate={rate}
             onAdd={addIngredient}
             onRemove={removeIngredient}
           />
-        )}
-        {activeTab === 'packaging' && (
+        </div>
+        <div className={activeTab !== 'packaging' ? 'hidden' : ''}>
           <PackagingTab
             packaging={packaging}
             rate={rate}
             onAdd={addPackaging}
             onRemove={removePackaging}
           />
-        )}
-        {activeTab === 'recipes' && (
+        </div>
+        <div className={activeTab !== 'recipes' ? 'hidden' : ''}>
           <RecipesTab
             recipes={recipes}
             ingredients={ingredients}
@@ -102,10 +102,10 @@ export default function App() {
             onAdd={addRecipe}
             onRemove={removeRecipe}
           />
-        )}
-        {activeTab === 'alvi' && (
+        </div>
+        <div className={activeTab !== 'alvi' ? 'hidden' : ''}>
           <AlviTab rate={rate} onAddIngredient={addIngredient} />
-        )}
+        </div>
       </main>
     </div>
   );
