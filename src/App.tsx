@@ -34,7 +34,7 @@ export default function App() {
 
       <main className="mx-auto max-w-4xl px-4 py-6">
         <div className="flex items-center justify-between mb-6 gap-3 flex-wrap">
-          <nav className="flex gap-1 bg-white rounded-xl border border-cream-200 p-1 shadow-card w-fit">
+          <nav className="flex gap-0.5 sm:gap-1 bg-white rounded-xl border border-cream-200 p-1 shadow-card w-full sm:w-fit">
             <TabButton
               active={activeTab === 'ingredients'}
               onClick={() => setActiveTab('ingredients')}
@@ -112,7 +112,7 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+      className={`flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-lg px-2 sm:px-4 py-2 text-sm font-medium transition-all whitespace-nowrap ${
         active
           ? 'bg-terracotta-500 text-white shadow-sm'
           : 'text-charcoal-700/60 hover:text-charcoal-800 hover:bg-cream-100'
