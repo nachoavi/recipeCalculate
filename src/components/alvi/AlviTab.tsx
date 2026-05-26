@@ -27,6 +27,16 @@ function parseFormat(format: string): { packageSize: number; unit: Unit } | null
   return { packageSize: size, unit };
 }
 
+function isSafeUrl(url: string | undefined): url is string {
+  if (!url) return false;
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'https:' || protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 function timeAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
   if (diff < 60) return 'hace un momento';
@@ -194,7 +204,7 @@ export function AlviTab({ rate, onAddIngredient }: AlviTabProps) {
                   )}
 
                   <div className="flex items-center gap-1.5">
-                    {product.url && (
+                    {isSafeUrl(product.url) && (
                       <a
                         href={product.url}
                         target="_blank"
