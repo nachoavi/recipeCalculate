@@ -35,6 +35,25 @@ export interface Recipe {
   profitMargin: number;
 }
 
+export interface AlviProduct {
+  product_id: string | number;
+  name: string;
+  brand: string;
+  format: string;
+  price: number | null;
+  list_price?: number | null;
+  ppum?: string;
+  in_stock: boolean;
+  categories?: string[];
+  url?: string;
+  image?: string;
+}
+
+export interface AlviData {
+  updatedAt: string | null;
+  products: AlviProduct[];
+}
+
 export interface CostBreakdown {
   ingredientCost: number;
   packagingCost: number;

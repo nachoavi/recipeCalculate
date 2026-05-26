@@ -1,16 +1,17 @@
 import { useState } from 'react';
-import { Package, ChefHat, Box, Download } from 'lucide-react';
+import { Package, ChefHat, Box, Download, ShoppingCart } from 'lucide-react';
 import { Header } from './components/layout/Header';
 import { IngredientsTab } from './components/ingredients/IngredientsTab';
 import { PackagingTab } from './components/packaging/PackagingTab';
 import { RecipesTab } from './components/recipes/RecipesTab';
+import { AlviTab } from './components/alvi/AlviTab';
 import { useIngredients } from './hooks/useIngredients';
 import { useRecipes } from './hooks/useRecipes';
 import { usePackaging } from './hooks/usePackaging';
 import { useExchangeRate } from './hooks/useExchangeRate';
 import { exportToExcel } from './services/export';
 
-type Tab = 'ingredients' | 'packaging' | 'recipes';
+type Tab = 'ingredients' | 'packaging' | 'recipes' | 'alvi';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<Tab>('ingredients');
@@ -56,6 +57,13 @@ export default function App() {
               label="Recetas"
               count={recipes.length}
             />
+            <TabButton
+              active={activeTab === 'alvi'}
+              onClick={() => setActiveTab('alvi')}
+              icon={<ShoppingCart size={15} />}
+              label="Alvi"
+              count={0}
+            />
           </nav>
 
           {hasData && (
@@ -95,6 +103,9 @@ export default function App() {
             onRemove={removeRecipe}
           />
         )}
+        {activeTab === 'alvi' && (
+          <AlviTab rate={rate} onAddIngredient={addIngredient} />
+        )}
       </main>
     </div>
   );
@@ -119,7 +130,7 @@ function TabButton({
       }`}
     >
       {icon}
-      {label}
+      <span className="hidden min-[480px]:inline">{label}</span>
       {count > 0 && (
         <span
           className={`rounded-full px-1.5 py-0.5 text-xs font-semibold ${
