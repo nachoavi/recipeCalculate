@@ -19,6 +19,7 @@ interface RecipeCardProps {
 
 export function RecipeCard({ recipe, ingredients, packaging, rate, onRemove }: RecipeCardProps) {
   const [expanded, setExpanded] = useState(false);
+  const [includeIVA, setIncludeIVA] = useState(false);
   const byIngId = new Map(ingredients.map((i) => [i.id, i]));
   const byPkgId = new Map(packaging.map((p) => [p.id, p]));
   const costs = calculateRecipeCost(recipe, ingredients, packaging);
@@ -136,12 +137,38 @@ export function RecipeCard({ recipe, ingredients, packaging, rate, onRemove }: R
               />
             )}
             {recipe.profitMargin > 0 && (
-              <CostRow
-                label={`Precio venta (${recipe.profitMargin}% margen)`}
-                clp={costs.sellingPrice}
-                rate={rate}
-                highlighted
-              />
+              <>
+                <CostRow
+                  label={`Precio venta (${recipe.profitMargin}% margen)`}
+                  clp={costs.sellingPrice}
+                  rate={rate}
+                  highlighted={!includeIVA}
+                />
+                <label className="flex items-center gap-2 cursor-pointer select-none pt-0.5">
+                  <input
+                    type="checkbox"
+                    checked={includeIVA}
+                    onChange={(e) => setIncludeIVA(e.target.checked)}
+                    className="w-3.5 h-3.5 rounded accent-terracotta-500 cursor-pointer"
+                  />
+                  <span className="text-xs text-charcoal-700/60">Agregar IVA (19%)</span>
+                </label>
+                {includeIVA && (
+                  <>
+                    <CostRow
+                      label="IVA (19%)"
+                      clp={costs.sellingPrice * 0.19}
+                      rate={rate}
+                    />
+                    <CostRow
+                      label="Precio venta con IVA"
+                      clp={costs.sellingPrice * 1.19}
+                      rate={rate}
+                      highlighted
+                    />
+                  </>
+                )}
+              </>
             )}
           </div>
 
@@ -157,12 +184,14 @@ export function RecipeCard({ recipe, ingredients, packaging, rate, onRemove }: R
               </p>
             </div>
             <div className="rounded-lg bg-terracotta-500/8 border border-terracotta-400/20 px-3 py-2">
-              <p className="text-xs text-charcoal-700/50 mb-1">Precio venta / porción</p>
+              <p className="text-xs text-charcoal-700/50 mb-1">
+                Precio venta / porción{includeIVA ? ' (c/ IVA)' : ''}
+              </p>
               <p className="text-sm font-semibold text-money text-terracotta-600">
-                {formatCLP(costs.sellingPricePerServing)}
+                {formatCLP((includeIVA ? costs.sellingPricePerServing * 1.19 : costs.sellingPricePerServing))}
               </p>
               <p className="text-xs text-terracotta-500/60 text-money">
-                {formatUSD(costs.sellingPricePerServing, rate)}
+                {formatUSD((includeIVA ? costs.sellingPricePerServing * 1.19 : costs.sellingPricePerServing), rate)}
               </p>
             </div>
           </div>
