@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Package, ChefHat, Box, Download, ShoppingCart } from 'lucide-react';
 import { Header } from './components/layout/Header';
-import { Footer } from './components/layout/Footer';
 import { IngredientsTab } from './components/ingredients/IngredientsTab';
 import { PackagingTab } from './components/packaging/PackagingTab';
 import { RecipesTab } from './components/recipes/RecipesTab';
@@ -108,7 +107,6 @@ export default function App() {
           <AlviTab rate={rate} onAddIngredient={addIngredient} />
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
